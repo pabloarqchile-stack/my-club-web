@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Club · La app de tu club deportivo</title>
+<meta name="description" content="My Club ordena cobros, asistencia, trámites y comunicación de clubes deportivos, asociaciones y federaciones de Chile. Para directivos, entrenadores, deportistas y apoderados.">
+<meta name="theme-color" content="#1F4E79">
+<meta property="og:title" content="My Club · La app de tu club deportivo">
+<meta property="og:description" content="Cobros, asistencia, trámites y comunicación del club en una sola app.">
+<meta property="og:image" content="img/logo.png">
+<meta property="og:locale" content="es_CL">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="icon" href="img/escudo.png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root{
+  --navy:#1F4E79; --navy-2:#163A5C; --navy-3:#0E2640;
+  --green:#1BAF7A; --orange:#F5821F; --orange-2:#E36A0B; --teal:#2EC4B6;
+  --red:#E5484D; --amber:#F2B01E;
+  --bg:#F4F6FA; --surface:#FFFFFF; --surface-2:#EAF0F7;
+  --ink:#0F1B2B; --ink-2:#44546A; --line:#DCE3EC;
+  --chip-ok-bg:#E3F6EE; --chip-ok:#0F7A52;
+  --chip-warn-bg:#FDF3D7; --chip-warn:#8A5A00;
+  --chip-bad-bg:#FDE6E6; --chip-bad:#B4232A;
+  --shadow:0 1px 2px rgba(15,27,43,.06),0 8px 24px rgba(15,27,43,.08);
+  --radius:16px;
+  --font:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1522; --surface:#122236; --surface-2:#18304A;
+    --ink:#E8EEF6; --ink-2:#A3B3C7; --line:#22394F;
+    --chip-ok-bg:#103A2B; --chip-ok:#6FE0B2;
+    --chip-warn-bg:#3A2D0B; --chip-warn:#F5CF6B;
+    --chip-bad-bg:#401619; --chip-bad:#FF9EA1;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1522; --surface:#122236; --surface-2:#18304A;
+  --ink:#E8EEF6; --ink-2:#A3B3C7; --line:#22394F;
+  --chip-ok-bg:#103A2B; --chip-ok:#6FE0B2;
+  --chip-warn-bg:#3A2D0B; --chip-warn:#F5CF6B;
+  --chip-bad-bg:#401619; --chip-bad:#FF9EA1;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{line-height:1.08;margin:0;font-stretch:112%;letter-spacing:-.01em}
+h2{font-size:clamp(30px,4.4vw,48px);font-weight:850}
+h3{font-size:20px;font-weight:750;font-stretch:100%}
+p{margin:0}
+.wrap{width:100%;max-width:1160px;margin:0 auto;padding:0 20px}
+.eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--ink-2);max-width:620px}
+section{padding:96px 0}
+.sec-head{display:grid;gap:14px;margin-bottom:48px;max-width:720px}
+.sec-head.center{margin-inline:auto;text-align:center;justify-items:center}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:14px;font:700 17px/1 var(--font);text-decoration:none;border:0;cursor:pointer;transition:transform .15s ease,background .15s ease,box-shadow .15s ease}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--orange);color:#fff;box-shadow:0 6px 18px rgba(245,130,31,.35)}
+.btn-primary:hover{background:var(--orange-2)}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-ghost:hover{background:rgba(255,255,255,.18)}
+.btn svg{width:20px;height:20px}
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:6px}
+
+/* ---------- Nav ---------- */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .2s ease,box-shadow .2s ease;padding-top:env(safe-area-inset-top)}
+.nav.solid{background:rgba(14,38,64,.92);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-weight:900;font-stretch:125%;font-size:20px;letter-spacing:.02em}
+.brand img{width:36px;height:36px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{color:rgba(255,255,255,.82);text-decoration:none;font-weight:600;font-size:15px}
+.nav-links a:hover{color:#fff}
+.nav .btn{min-height:42px;padding:0 18px;font-size:15px}
+@media (max-width:860px){.nav-links a:not(.btn){display:none}}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;background:radial-gradient(1200px 600px at 80% -10%,#2A6AA3 0%,transparent 60%),linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 55%,var(--navy-3) 100%);color:#fff;padding:140px 0 0;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:120px;background:linear-gradient(to bottom,transparent,var(--bg))}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(36px,4.6vw,60px);font-weight:900;font-stretch:108%}
+.hero h1 .hl{color:var(--teal)}
+.hero .lead{color:rgba(255,255,255,.82);margin-top:22px}
+.hero .eyebrow{color:var(--teal);margin-bottom:18px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.hero-note{margin-top:18px;font-size:14px;color:rgba(255,255,255,.6)}
+.hero-logo{width:84px;margin-bottom:18px;filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
+.phones{position:relative;height:620px}
+.phone{position:absolute;aspect-ratio:1170/2532;border-radius:42px;padding:9px;background:#0A1422;box-shadow:0 30px 60px rgba(0,0,0,.45),inset 0 0 0 1.5px rgba(255,255,255,.12)}
+.phone img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:34px}
+.phones .p1{width:270px;left:50%;top:10px;transform:translateX(-50%);z-index:3}
+.phones .p2{width:230px;left:2%;top:90px;transform:rotate(-7deg);z-index:2;opacity:.95}
+.phones .p3{width:230px;right:2%;top:90px;transform:rotate(7deg);z-index:2;opacity:.95}
+@media (max-width:960px){
+  .hero{padding-top:118px}
+  .hero-grid{grid-template-columns:1fr;text-align:center}
+  .hero .lead{margin-inline:auto}
+  .hero-ctas{justify-content:center}
+  .hero-logo{margin-inline:auto}
+  .phones{height:500px;margin-top:10px}
+  .phones .p1{width:220px}
+  .phones .p2,.phones .p3{width:180px;top:70px}
+  .phones .p2{left:calc(50% - 250px)} .phones .p3{right:calc(50% - 250px)}
+}
+@media (max-width:520px){
+  .phones{height:430px}
+  .phones .p1{width:200px}
+  .phones .p2,.phones .p3{width:150px;top:70px}
+  .phones .p2{left:-14px} .phones .p3{right:-14px}
+}
+
+/* ---------- Sports strip ---------- */
+.sports{padding:34px 0 0}
+.sports p{text-align:center;color:var(--ink-2);font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:15px}
+
+/* ---------- Pains ---------- */
+.pains{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pain{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+.pain .from{color:var(--ink-2);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px;font-weight:600}
+.pain .to{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-weight:700;font-size:19px}
+.pain .to svg{flex:none;width:24px;height:24px;color:var(--green);margin-top:2px}
+@media (max-width:860px){.pains{grid-template-columns:1fr}}
+
+/* ---------- Features ---------- */
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.feat{background:var(--surface);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);display:grid;gap:12px;align-content:start}
+.ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.ico svg{width:26px;height:26px}
+.feat p{color:var(--ink-2);font-size:15.5px}
+.g-blue{background:linear-gradient(145deg,#2E6DA4,#1F4E79)}
+.g-green{background:linear-gradient(145deg,#2BD195,#169A6B)}
+.g-orange{background:linear-gradient(145deg,#FFA94D,#F07B16)}
+.g-purple{background:linear-gradient(145deg,#9B7BF0,#6C4BD8)}
+.g-teal{background:linear-gradient(145deg,#33CFE0,#1597A8)}
+.g-red{background:linear-gradient(145deg,#FF7A7A,#E0454B)}
+.g-yellow{background:linear-gradient(145deg,#FFD24D,#EFA912)}
+.g-pink{background:linear-gradient(145deg,#F583B5,#D94A8C)}
+.g-indigo{background:linear-gradient(145deg,#6F86F5,#4459D6)}
+@media (max-width:1040px){.features{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.features{grid-template-columns:1fr}}
+
+/* ---------- Roles ---------- */
+.roles{background:var(--surface)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px;margin:0 -4px 36px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:650 15.5px/1 var(--font);cursor:pointer;transition:all .15s ease}
+.tab svg{width:18px;height:18px}
+.tab[aria-selected="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.role-panel{display:grid;grid-template-columns:1fr 330px;gap:56px;align-items:center}
+.role-panel[hidden]{display:none}
+.role-panel h3{font-size:clamp(26px,3vw,34px);font-stretch:112%;font-weight:850}
+.role-panel .lead{margin-top:14px}
+.checks{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:14px}
+.checks li{display:flex;gap:12px;align-items:flex-start}
+.checks li svg{flex:none;width:22px;height:22px;color:var(--green);margin-top:3px}
+.role-phone{position:relative;width:300px;justify-self:center}
+.role-phone .phone{position:relative}
+.role-panel.enter .role-phone{animation:rise .45s ease both}
+.role-panel.enter .role-copy{animation:fade .45s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media (max-width:860px){
+  .role-panel{grid-template-columns:1fr;gap:36px}
+  .role-phone{width:250px}
+}
+
+/* ---------- Rules band ---------- */
+.rules{background:linear-gradient(160deg,var(--navy-2),var(--navy-3));color:#fff}
+.rules .lead{color:rgba(255,255,255,.78)}
+.rules .eyebrow{color:var(--teal)}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.rule{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:30px}
+.rule h3{font-size:22px;margin-bottom:10px}
+.rule p{color:rgba(255,255,255,.75);font-size:16px}
+.status{display:grid;gap:10px;margin-top:22px}
+.status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;font-size:15px}
+.badge{display:inline-flex;align-items:center;padding:5px 12px;border-radius:999px;font-weight:700;font-size:14px;white-space:nowrap}
+.b-ok{background:#E3F6EE;color:#0F7A52}
+.b-warn{background:#FDF3D7;color:#8A5A00}
+.b-bad{background:#FDE6E6;color:#B4232A}
+.countdown{display:flex;gap:5px;margin-top:22px}
+.day{flex:1 1 0;min-width:0;max-width:40px;height:46px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:15px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)}
+.day.on{background:var(--teal);color:#06303A}
+.day.we{background:transparent;border:1px dashed rgba(255,255,255,.2);font-size:11px;font-weight:600}
+.legend{margin-top:12px;font-size:14px;color:rgba(255,255,255,.6)}
+@media (max-width:860px){.rules-grid{grid-template-columns:1fr}}
+
+/* ---------- Steps ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+.step{position:relative;background:var(--surface);border-radius:var(--radius);padding:30px 26px;box-shadow:var(--shadow)}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--orange);color:#fff;font-weight:900;font-size:20px;margin-bottom:18px}
+.step p{color:var(--ink-2);margin-top:8px;font-size:16px}
+.step code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;background:var(--surface-2);padding:2px 7px;border-radius:6px;color:var(--ink)}
+@media (max-width:860px){.steps{grid-template-columns:1fr}}
+
+/* ---------- Trust ---------- */
+.trust{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.trust-item{display:flex;gap:16px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.trust-item .ico{flex:none;width:46px;height:46px;border-radius:12px}
+.trust-item .ico svg{width:22px;height:22px}
+.trust-item p{color:var(--ink-2);font-size:15.5px;margin-top:6px}
+@media (max-width:760px){.trust{grid-template-columns:1fr}}
+
+/* ---------- FAQ ---------- */
+.faq{max-width:820px;margin:0 auto;display:grid;gap:12px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 22px}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;font-weight:700;font-size:17.5px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";flex:none;width:12px;height:12px;border-right:2.5px solid var(--ink-2);border-bottom:2.5px solid var(--ink-2);transform:rotate(45deg) translateY(-3px);transition:transform .2s ease}
+details[open] summary::after{transform:rotate(-135deg) translateY(-3px)}
+details p{color:var(--ink-2);padding-bottom:20px;margin-top:-4px}
+
+/* ---------- CTA ---------- */
+.cta{padding:0 0 96px}
+.cta-box{position:relative;overflow:hidden;border-radius:28px;padding:64px 40px;text-align:center;color:#fff;background:radial-gradient(700px 300px at 50% 0%,#2A6AA3,transparent 70%),linear-gradient(160deg,var(--navy),var(--navy-3))}
+.cta-box img{width:84px;margin:0 auto 22px}
+.cta-box h2{max-width:720px;margin:0 auto}
+.cta-box p{color:rgba(255,255,255,.78);max-width:560px;margin:16px auto 0}
+.cta-box .hero-ctas{justify-content:center}
+@media (max-width:560px){.cta-box{padding:48px 22px;border-radius:22px}}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line);padding:32px 0 calc(32px + env(safe-area-inset-bottom))}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;font-size:14.5px;color:var(--ink-2)}
+footer nav{display:flex;flex-wrap:wrap;gap:20px}
+footer a{text-decoration:none}
+footer a:hover{color:var(--ink)}
+.f-brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink)}
+.f-brand img{width:28px;height:28px}
+
+/* ---------- Reveal ---------- */
+.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .role-panel.enter .role-phone,.role-panel.enter .role-copy{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Íconos (SVG en línea, se reutilizan con <use>) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m8 12.5 2.6 2.5L16 9.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 4l9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-vote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h2v2h-2zM18 18h2v2h-2zM14 18v2M18 14h2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0V4ZM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 20h8"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-whistle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a5 5 0 1 0 10 0h8V8H8.6A5 5 0 0 0 3 12Z"/><circle cx="8" cy="12" r="1.2"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h11l-2 4 2 4H5"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9 5.5 4h13L20 9M4 9v11h16V9M4 9h16M9 20v-6h6v6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-child" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="3"/><circle cx="17" cy="9.5" r="2.2"/><path d="M2.5 20a5.5 5.5 0 0 1 11 0M13.5 20a3.5 3.5 0 0 1 7 0"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="7" rx="2"/><rect x="4" y="13" width="16" height="7" rx="2"/><path d="M8 7.5h.01M8 16.5h.01"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="My Club, inicio"><img src="img/escudo.png" alt="" width="36" height="36">MY CLUB</a>
+    <nav class="nav-links" aria-label="Principal">
+      <a href="#funciones">Funciones</a>
+      <a href="#perfiles">Perfiles</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#preguntas">Preguntas</a>
+      <a class="btn btn-primary js-demo" href="#">Probar la demo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <img class="hero-logo" src="img/logo.png" alt="My Club" width="110">
+        <span class="eyebrow">Clubes, asociaciones y federaciones de Chile</span>
+        <h1>Tu club en orden.<br><span class="hl">Todos en la misma cancha.</span></h1>
+        <p class="lead">Cobros, asistencia, trámites y comunicación del club en una sola app. Para directivos, entrenadores, deportistas y apoderados, desde el celular.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary js-demo" href="#"><svg aria-hidden="true"><use href="#i-play"/></svg>Probar la demo</a>
+          <a class="btn btn-ghost" href="#funciones">Ver funciones</a>
+        </div>
+        <p class="hero-note">La demo funciona en el navegador, sin instalar nada, con datos de ejemplo.</p>
+      </div>
+      <div class="phones" aria-hidden="true">
+        <div class="phone p2"><img src="img/jugador-01-inicio.jpg" alt="" loading="eager"></div>
+        <div class="phone p1"><img src="img/directivo-01-inicio.jpg" alt="" loading="eager"></div>
+        <div class="phone p3"><img src="img/apoderado-01-inicio.jpg" alt="" loading="eager"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPORTES -->
+  <div class="sports">
+    <div class="wrap">
+      <p>Varios deportes por club</p>
+      <div class="chips">
+        <span class="chip">⚽ Fútbol</span><span class="chip">🏀 Básquetbol</span><span class="chip">🏐 Vóleibol</span>
+        <span class="chip">🏉 Rugby</span><span class="chip">🏃 Atletismo</span><span class="chip">🏊 Natación</span>
+        <span class="chip">🚣 Remo</span><span class="chip">＋ y cualquier otro</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOLORES -->
+  <section id="por-que">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Por qué My Club</span>
+        <h2>Lo que hoy vive en planillas, cuadernos y grupos de WhatsApp.</h2>
+      </div>
+      <div class="pains">
+        <div class="pain reveal">
+          <div class="from">La planilla de cuotas que nadie actualiza</div>
+          <div class="to"><svg aria-hidden="true"><use href="#i-check"/></svg>Cada deportista ve lo que debe y paga desde la app.</div>
+        </div>
+        <div class="pain reveal">
+          <div class="from">“¿Quién va el sábado?” en el grupo</div>
+          <div class="to"><svg aria-hidden="true"><use href="#i-check"/></svg>Convocatoria con Voy / No voy y asistencia registrada.</div>
+        </div>
+        <div class="pain reveal">
+          <div class="from">Renuncias y pases sin reglas claras</div>
+          <div class="to"><svg aria-hidden="true"><use href="#i-check"/></svg>Trámites con plazos, motivos y comprobante.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNCIONES -->
+  <section id="funciones" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Funciones</span>
+        <h2>Todo lo que mueve a un club, en un solo lugar.</h2>
+        <p class="lead">Cada perfil ve solo lo que le corresponde, y el inicio se puede ordenar a gusto.</p>
+      </div>
+      <div class="features">
+        <article class="feat reveal">
+          <div class="ico g-green"><svg aria-hidden="true"><use href="#i-bank"/></svg></div>
+          <h3>Finanzas y cobros</h3>
+          <p>Mensualidades, matrículas y cuotas por club, deporte o categoría. Ingresos, egresos y morosidad en un panel.</p>
+        </article>
+        <article class="feat reveal">
+          <div class="ico g-blue"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+          <h3>Estado al día</h3>
+          <p>Cada deportista aparece Hábil, En revisión o Suspendido según sus mensualidades, sin cálculos a mano.</p>
+        </article>
+        <article class="feat reveal">
+          <div class="ico g-indigo"><svg aria-hidden="true"><use href="#i-cal"/></svg></div>
+          <h3>Partidos y asistencia</h3>
+          <p>Entrenamientos y partidos en el calendario, convocatorias y asistencia por categoría.</p>
+        </article>
+        <article class="feat reveal">
+          <div class="ico g-orange"><svg aria-hidden="true"><use href="#i-clock"/></svg></div>
+          <h3>Trámites con plazo</h3>
+          <p>Incorporaciones, transferencias, renuncias y bajas con 10 días hábiles para reclamar, descontando feriados de Chile.</p>
+        </article>
+        <article class="feat reveal">
+          <div class="ico g-purple"><svg aria-hidden="true"><use href="#i-vote"/></svg></div>
+          <h3>Asambleas y encuestas</h3>
+          <p>Convoca asambleas, registra asistencia con QR y consulta a los socios. Los resultados no identifican a nadie.</p>
+        </article>
+        <article class="feat reveal">
+          <div class="ico g-teal"><svg aria-hidden="true"><use href="#i-qr"/></svg></div>
+          <h3>Documentos verificables</h3>
+          <p>Certificados, credencial y currículum deportivo con código QR que cualquiera puede verificar.</p>
+        </article>
+        <article class="feat reveal">
+          <div class="ico g-pink"><svg aria-hidden="true"><use href="#i-chat"/></svg></div>
+          <h3>Mensajes y muro</h3>
+          <p>Avisos masivos por deporte o categoría, chat y muro del club, con opción de reportar y bloquear.</p>
+        </article>
+        <article class="feat reveal">
+          <div class="ico g-yellow"><svg aria-hidden="true"><use href="#i-trophy"/></svg></div>
+          <h3>Torneos y proveedores</h3>
+          <p>Base de torneos para inscribir equipos y un marketplace para pedir cotizaciones de implementos y recintos.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFILES -->
+  <section class="roles" id="perfiles">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Perfiles</span>
+        <h2>Una app, seis miradas.</h2>
+        <p class="lead">Cada cuenta tiene su propio inicio y sus pestañas. Elige un perfil para ver qué hace.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Perfiles de My Club">
+        <button class="tab" role="tab" id="t-club" aria-controls="p-club" aria-selected="true"><svg aria-hidden="true"><use href="#i-shield"/></svg>Club</button>
+        <button class="tab" role="tab" id="t-dep" aria-controls="p-dep" aria-selected="false" tabindex="-1"><svg aria-hidden="true"><use href="#i-user"/></svg>Deportista</button>
+        <button class="tab" role="tab" id="t-apo" aria-controls="p-apo" aria-selected="false" tabindex="-1"><svg aria-hidden="true"><use href="#i-child"/></svg>Apoderado</button>
+        <button class="tab" role="tab" id="t-ent" aria-controls="p-ent" aria-selected="false" tabindex="-1"><svg aria-hidden="true"><use href="#i-whistle"/></svg>Entrenador</button>
+        <button class="tab" role="tab" id="t-fed" aria-controls="p-fed" aria-selected="false" tabindex="-1"><svg aria-hidden="true"><use href="#i-flag"/></svg>Federación</button>
+        <button class="tab" role="tab" id="t-pro" aria-controls="p-pro" aria-selected="false" tabindex="-1"><svg aria-hidden="true"><use href="#i-store"/></svg>Proveedor</button>
+      </div>
+
+      <div class="role-panel" role="tabpanel" id="p-club" aria-labelledby="t-club">
+        <div class="role-copy">
+          <h3>El directorio, con las cuentas claras.</h3>
+          <p class="lead">Finanzas, aprobaciones y socios del club en un panel que se entiende de un vistazo.</p>
+          <ul class="checks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Ingresos vs. egresos, gasto por categoría y morosidad.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Aprueba incorporaciones, transferencias, bajas y reclamos.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Deportes, categorías, cuerpo técnico, recintos y directivos con permisos.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Asambleas, préstamos de implementos y mensajes masivos.</li>
+          </ul>
+        </div>
+        <div class="role-phone"><div class="phone"><img src="img/directivo-02-d-finanzas.jpg" alt="Pantalla de Finanzas del club con ingresos, egresos y gasto por categoría" loading="lazy"></div></div>
+      </div>
+
+      <div class="role-panel" role="tabpanel" id="p-dep" aria-labelledby="t-dep" hidden>
+        <div class="role-copy">
+          <h3>Tu historia deportiva, siempre contigo.</h3>
+          <p class="lead">Calendario, pagos y estado en el club, más un currículum que no se borra aunque cambies de club.</p>
+          <ul class="checks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Confirma si vas al partido o al entrenamiento.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Revisa y paga tus cuotas pendientes.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Currículum deportivo, certificado y credencial con QR.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Únete a un club con su ID o pide tu cambio de club.</li>
+          </ul>
+        </div>
+        <div class="role-phone"><div class="phone"><img src="img/jugador-10-j-cv.jpg" alt="Currículum deportivo con partidos, goles, clubes y torneos" loading="lazy"></div></div>
+      </div>
+
+      <div class="role-panel" role="tabpanel" id="p-apo" aria-labelledby="t-apo" hidden>
+        <div class="role-copy">
+          <h3>Todos tus pupilos en una pantalla.</h3>
+          <p class="lead">Aunque estén en clubes y deportes distintos, cada uno con sus pagos y su asistencia.</p>
+          <ul class="checks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Ve deuda y estado de cada pupilo.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Paga varias cuotas juntas y guarda el comprobante.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Registra a un menor o vincúlate a su cuenta con su aceptación.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Reportes de asistencia y mensajes con el club.</li>
+          </ul>
+        </div>
+        <div class="role-phone"><div class="phone"><img src="img/apoderado-03-pagos.jpg" alt="Pagos pendientes de un pupilo con cuotas mensuales y matrícula" loading="lazy"></div></div>
+      </div>
+
+      <div class="role-panel" role="tabpanel" id="p-ent" aria-labelledby="t-ent" hidden>
+        <div class="role-copy">
+          <h3>Menos logística, más cancha.</h3>
+          <p class="lead">El plantel, los partidos y las convocatorias de cada categoría, ordenados.</p>
+          <ul class="checks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Crea entrenamientos y partidos y convoca al plantel.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Ve quién está hábil y quién suspendido antes de citar.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Rutinas, carga de trabajo y encuestas al equipo.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Propón torneos al club para su visto bueno.</li>
+          </ul>
+        </div>
+        <div class="role-phone"><div class="phone"><img src="img/entrenador-01-inicio.jpg" alt="Inicio del entrenador con plantel, suspendidos y próximo partido" loading="lazy"></div></div>
+      </div>
+
+      <div class="role-panel" role="tabpanel" id="p-fed" aria-labelledby="t-fed" hidden>
+        <div class="role-copy">
+          <h3>La foto completa del deporte.</h3>
+          <p class="lead">Para federaciones y asociaciones regionales: clubes, deportistas y comunicados en un tablero.</p>
+          <ul class="checks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Clubes y deportistas federados por región y categoría.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Comunicados oficiales a todos los clubes.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Valores de la temporada y credencial federada.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Nóminas y documentos que suben los clubes.</li>
+          </ul>
+        </div>
+        <div class="role-phone"><div class="phone"><img src="img/federacion-02-f-dashboard.jpg" alt="Dashboard de federación con deportistas federados por región" loading="lazy"></div></div>
+      </div>
+
+      <div class="role-panel" role="tabpanel" id="p-pro" aria-labelledby="t-pro" hidden>
+        <div class="role-copy">
+          <h3>Llega directo a los clubes.</h3>
+          <p class="lead">Tiendas deportivas, recintos y servicios con vitrina dentro de la app.</p>
+          <ul class="checks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Catálogo de productos y servicios con precios.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Recibe y responde cotizaciones de clubes.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Arrienda recintos con horarios semanales.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Ofrece tus torneos a equipos de todo Chile.</li>
+          </ul>
+        </div>
+        <div class="role-phone"><div class="phone"><img src="img/proveedor-01-inicio.jpg" alt="Inicio del proveedor con catálogo, cotizaciones y torneos" loading="lazy"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGLAS -->
+  <section class="rules">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Reglas claras</span>
+        <h2>La app aplica las reglas. Nadie tiene que hacer de malo.</h2>
+        <p class="lead">El estado de cada deportista y los plazos de cada trámite se calculan solos, igual para todos.</p>
+      </div>
+      <div class="rules-grid">
+        <div class="rule reveal">
+          <h3>Estado según mensualidades</h3>
+          <p>Cada mensualidad vence el último día del mes. El estado se actualiza solo.</p>
+          <div class="status">
+            <div class="status-row"><span>0 a 2 meses vencidos</span><span class="badge b-ok">Hábil</span></div>
+            <div class="status-row"><span>3 a 4 meses vencidos</span><span class="badge b-warn">En revisión</span></div>
+            <div class="status-row"><span>5 o más · no convocable</span><span class="badge b-bad">Suspendido</span></div>
+          </div>
+        </div>
+        <div class="rule reveal">
+          <h3>10 días hábiles para responder</h3>
+          <p>Ante una renuncia o baja, la otra parte recibe los motivos y tiene 10 días hábiles para reclamar o ponerse al día. Si paga la deuda a tiempo, la baja se anula sola.</p>
+          <div class="countdown" aria-label="Ejemplo de plazo de 10 días hábiles, saltando fin de semana">
+            <span class="day on">1</span><span class="day on">2</span><span class="day on">3</span><span class="day on">4</span><span class="day on">5</span>
+            <span class="day we">S</span><span class="day we">D</span>
+            <span class="day">6</span><span class="day">7</span><span class="day">8</span><span class="day">9</span><span class="day">10</span>
+          </div>
+          <p class="legend">Sin contar fines de semana ni feriados de Chile.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section id="como-funciona">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Cómo funciona</span>
+        <h2>Tu club funcionando en tres pasos.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <h3>Registra el club</h3>
+          <p>Crea la cuenta del club con su RUT, agrega deportes y categorías, y recibe un ID único como <code>C00000001</code>.</p>
+        </div>
+        <div class="step reveal">
+          <h3>Comparte el ID</h3>
+          <p>Deportistas, apoderados y entrenadores buscan el club por nombre o ID y piden unirse. El club aprueba cada solicitud.</p>
+        </div>
+        <div class="step reveal">
+          <h3>Cobra y organiza</h3>
+          <p>Define matrícula y mensualidad, convoca a partidos y comunica todo desde la app. Cada uno lo ve en su celular.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIANZA -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Datos cuidados</span>
+        <h2>Pensada para datos de deportistas, RUT y menores.</h2>
+      </div>
+      <div class="trust">
+        <div class="trust-item reveal">
+          <div class="ico g-blue"><svg aria-hidden="true"><use href="#i-lock"/></svg></div>
+          <div><h3>Cada perfil ve lo suyo</h3><p>Las finanzas son solo del club; el entrenador ve su plantel; el apoderado solo ve a pupilos que aceptaron el vínculo.</p></div>
+        </div>
+        <div class="trust-item reveal">
+          <div class="ico g-green"><svg aria-hidden="true"><use href="#i-child"/></svg></div>
+          <div><h3>Menores protegidos</h3><p>Los menores de 14 años solo se unen a un club cuando tienen un apoderado aceptado.</p></div>
+        </div>
+        <div class="trust-item reveal">
+          <div class="ico g-purple"><svg aria-hidden="true"><use href="#i-server"/></svg></div>
+          <div><h3>Servidores en Sudamérica</h3><p>Los datos se guardan en São Paulo, y nombre, RUT y fecha de nacimiento no se pueden alterar después del registro.</p></div>
+        </div>
+        <div class="trust-item reveal">
+          <div class="ico g-orange"><svg aria-hidden="true"><use href="#i-user"/></svg></div>
+          <div><h3>Tu cuenta, tu decisión</h3><p>Cualquier persona puede editar su perfil o eliminar su cuenta desde la app.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREGUNTAS -->
+  <section id="preguntas" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">Preguntas frecuentes</span>
+        <h2>Lo que suelen preguntar.</h2>
+      </div>
+      <div class="faq">
+        <details class="reveal">
+          <summary>¿Hay que instalar algo?</summary>
+          <p>No. My Club funciona desde el navegador del celular o el computador. En iPhone se agrega a la pantalla de inicio desde Safari (Compartir → Agregar a pantalla de inicio) y se abre como una app. Las versiones para App Store y Google Play están en preparación.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Sirve para un club con varios deportes?</summary>
+          <p>Sí. Un club puede tener varios deportes, cada uno con sus categorías, matrícula y mensualidad. Un deportista puede estar en clubes distintos para deportes distintos.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Cómo pagan los socios?</summary>
+          <p>Cada club define sus cobros y sus datos de transferencia. El pago en línea con la cuenta de Mercado Pago del propio club está en implementación: el dinero llega directo al club.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Qué pasa con el historial si un deportista cambia de club?</summary>
+          <p>Su currículum deportivo (partidos, torneos, selecciones y clubes) se mantiene. Nunca se borra.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Sirve para federaciones y asociaciones?</summary>
+          <p>Sí. Tienen su propio perfil con tablero por región y categoría, comunicados a los clubes y valores de la temporada.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿La demo usa datos reales?</summary>
+          <p>No. La demo trae clubes, deportistas y movimientos de ejemplo, y los pagos son simulados. Puedes entrar con cualquiera de los seis perfiles.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="wrap">
+      <div class="cta-box reveal">
+        <img src="img/logo.png" alt="" width="84">
+        <h2>Lleva tu club a My Club.</h2>
+        <p>Recorre la demo con el perfil que quieras: club, deportista, apoderado, entrenador, federación o proveedor.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary js-demo" href="#"><svg aria-hidden="true"><use href="#i-play"/></svg>Probar la demo</a>
+          <a class="btn btn-ghost js-contact" href="#" hidden>Quiero My Club en mi club<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-brand"><img src="img/escudo.png" alt="" width="28" height="28">My Club · Hecho en Chile</div>
+    <nav aria-label="Pie de página">
+      <a class="js-demo" href="#">Demo</a>
+      <a class="js-legal" data-path="privacidad" href="#">Privacidad</a>
+      <a class="js-legal" data-path="terminos" href="#">Términos</a>
+      <a class="js-legal" data-path="contacto" href="#">Contacto</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* ---------- Configuración ---------- */
+const CONFIG = {
+  demoUrl: "https://pabloarqchile-stack.github.io/my-club-prototipo/",
+  // ?demo=1 hace que la demo abra con usuario y clave "demo" ya escritos.
+  demoQuery: "?demo=1",
+  // Correo para "Quiero My Club en mi club". Vacío = el botón no se muestra.
+  contactEmail: ""
+};
+
+document.querySelectorAll(".js-demo").forEach(a => { a.href = CONFIG.demoUrl + CONFIG.demoQuery; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll(".js-legal").forEach(a => { a.href = CONFIG.demoUrl + "#/legal/" + a.dataset.path; a.target = "_blank"; a.rel = "noopener"; });
+if (CONFIG.contactEmail) {
+  document.querySelectorAll(".js-contact").forEach(a => {
+    a.href = "mailto:" + CONFIG.contactEmail + "?subject=" + encodeURIComponent("Quiero My Club en mi club");
+    a.hidden = false;
+  });
+}
+
+/* ---------- Barra superior ---------- */
+const nav = document.getElementById("nav");
+const onScroll = () => nav.classList.toggle("solid", window.scrollY > 20);
+window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+/* ---------- Pestañas de perfiles ---------- */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function selectTab(tab, focus) {
+  tabs.forEach(t => {
+    const on = t === tab;
+    t.setAttribute("aria-selected", on);
+    t.tabIndex = on ? 0 : -1;
+    const panel = document.getElementById(t.getAttribute("aria-controls"));
+    panel.hidden = !on;
+    if (on) { panel.classList.remove("enter"); void panel.offsetWidth; panel.classList.add("enter"); }
+  });
+  if (focus) tab.focus();
+  tab.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+}
+tabs.forEach((t, i) => {
+  t.addEventListener("click", () => selectTab(t));
+  t.addEventListener("keydown", e => {
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (d) { e.preventDefault(); selectTab(tabs[(i + d + tabs.length) % tabs.length], true); }
+  });
+});
+
+/* ---------- Aparición al hacer scroll ---------- */
+const els = document.querySelectorAll(".reveal");
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { rootMargin: "0px 0px -8% 0px" });
+  els.forEach(el => io.observe(el));
+} else { els.forEach(el => el.classList.add("in")); }
+</script>
+</body>
+</html>
